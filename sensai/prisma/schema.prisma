@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String           @id @default(uuid())
+  clerkUserId     String           @unique
+  email           String           @unique
+  name            String?
+  imageUrl        String?
+  industry        String?
+  industryInsight IndustryInsight? @relation(fields: [industry], references: [industry])
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  bio        String?
+  experience Int?
+  skills     String[]
+
+  assessments Assessment[]
+  resumes     Resume[]      // ← CHANGED: was `resume Resume?` now `resumes Resume[]` (array)
+  coverLetter CoverLetter[]
+}
+
+model Assessment {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  quizScore      Float
+  questions      Json[]
+  category       String
+  improvementTip String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Resume {
+  id               String   @id @default(cuid())
+  userId           String   // ← CHANGED: removed @unique so one user can have many resumes
+  user             User     @relation(fields: [userId], references: [id])
+  title            String   @default("Untitled Resume") // ← NEW LINE 1: resume title
+  content          String   @db.Text
+  formData         Json?                                // ← NEW LINE 2: stores form fields as JSON
+  profileImage     String?
+  selectedTemplate String   @default("classic")
+  atsScore         Float?
+  feedback         String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([userId])                                    // ← NEW LINE 3: index for fast user queries
+}
+
+model CoverLetter {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  content        String
+  jobDescription String?
+  companyName    String
+  jobTitle       String
+  status         String   @default("draft")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model IndustryInsight {
+  id       String @id @default(cuid())
+  industry String @unique
+
+  users        User[]
+  salaryRanges Json[]
+  growthRate   Float
+  demandLevel  DemandLevel
+  topSkills    String[]
+
+  marketOutlook     MarketOutlook
+  keyTrends         String[]
+  recommendedSkills String[]
+
+  lastUpdated DateTime @default(now())
+  nextUpdate  DateTime
+
+  @@index([industry])
+}
+
+enum DemandLevel {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum MarketOutlook {
+  POSITIVE
+  NEUTRAL
+  NEGATIVE
+}
