@@ -16,6 +16,9 @@ export const industries = [
       "IoT (Internet of Things)",
       "Virtual/Augmented Reality",
       "Semiconductor & Electronics",
+      "SaaS (Software as a Service)",
+      "Developer Tools",
+      "Open Source",
     ],
   },
   {

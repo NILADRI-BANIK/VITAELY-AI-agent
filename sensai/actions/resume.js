@@ -12,7 +12,7 @@ export async function createResume(
   profileImage = null,
   selectedTemplate = "classic",
   formData = null,
-  title = "Untitled Resume"
+  title = "Untitled Resume",
 ) {
   const { userId } = await auth();
   if (!userId) throw new Error("Unauthorized");
@@ -48,7 +48,7 @@ export async function updateResume(
   profileImage = null,
   selectedTemplate = "classic",
   formData = null,
-  title = null
+  title = null,
 ) {
   const { userId } = await auth();
   if (!userId) throw new Error("Unauthorized");
@@ -97,7 +97,6 @@ export async function getAllResumes() {
       title: true,
       selectedTemplate: true,
       profileImage: true,
-      atsScore: true,
       createdAt: true,
       updatedAt: true,
     },
@@ -126,8 +125,6 @@ export async function getResumeById(resumeId) {
       profileImage: true,
       selectedTemplate: true,
       formData: true,
-      atsScore: true,
-      feedback: true,
       createdAt: true,
       updatedAt: true,
     },
@@ -335,33 +332,20 @@ export async function improveSummaryWithAI(currentSummary) {
 
     const response = result.response;
 
-    const improvedSummary = (
-      await response.text()
-    ).trim();
+    const improvedSummary = (await response.text()).trim();
 
     if (!improvedSummary) {
       throw new Error("Empty AI response");
     }
 
-    return improvedSummary
-      .replace(/\*\*/g, "")
-      .trim();
-
+    return improvedSummary.replace(/\*\*/g, "").trim();
   } catch (error) {
-    console.error(
-      "Error improving summary:",
-      error
-    );
+    console.error("Error improving summary:", error);
 
     if (error.message?.includes("429")) {
-      throw new Error(
-        "AI usage limit exceeded. Please try again later."
-      );
+      throw new Error("AI usage limit exceeded. Please try again later.");
     }
 
-    throw new Error(
-      error.message ||
-      "Failed to improve summary"
-    );
+    throw new Error(error.message || "Failed to improve summary");
   }
 }

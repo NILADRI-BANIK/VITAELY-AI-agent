@@ -73,3 +73,30 @@ export async function getIndustryInsights() {
 
   return user.industryInsight;
 }
+
+export async function getProjectGeneratorStats() {
+  const { userId } = await auth();
+  if (!userId) throw new Error("Unauthorized");
+
+  const user = await db.user.findUnique({
+    where: { clerkUserId: userId },
+  });
+
+  if (!user) throw new Error("User not found");
+
+  const [totalGenerated, recentProjects] = await Promise.all([
+    db.projectIdea.count({
+      where: { userId: user.id },
+    }),
+    db.projectIdea.findMany({
+      where: { userId: user.id },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+    }),
+  ]);
+
+  return {
+    totalGenerated,
+    recentProjects,
+  };
+}

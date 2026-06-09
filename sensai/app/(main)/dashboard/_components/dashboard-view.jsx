@@ -9,6 +9,7 @@ import {
   LineChart,
   BriefcaseIcon,
   Brain,
+  BookOpen,
 } from "lucide-react";
 
 // date
@@ -35,6 +36,7 @@ import {
   CartesianGrid,
   Tooltip,
 } from "recharts";
+import Link from "next/link";
 
 const DashboardView = ({ insights }) => {
   const salaryData = insights.salaryRanges.map((range) => ({
@@ -229,11 +231,31 @@ const DashboardView = ({ insights }) => {
             </div>
           </CardContent>
         </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              Skill Gap Analyzer
+            </CardTitle>
+            <BookOpen className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-3">
+              Identify missing skills for your dream job and get a personalized
+              learning roadmap.
+            </p>
+            <Link
+              href="/skill-gap"
+              className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+            >
+              Start Analysis →
+            </Link>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
 
-  return <div>DashboardView</div>;
 };
 
 export default DashboardView;

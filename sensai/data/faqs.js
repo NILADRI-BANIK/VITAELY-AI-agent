@@ -29,4 +29,24 @@ export const faqs = [
     answer:
       "Yes! While Sensai generates high-quality initial content, you have full control to edit and customize all generated resumes, cover letters, and other content. Our markdown editor makes it easy to refine the content to perfectly match your needs.",
   },
+  {
+    question: "How does the AI Project Idea Generator work?",
+    answer:
+      "The AI Project Idea Generator analyzes your skills, experience level, domain preference, and project complexity to generate personalized project ideas. Each idea includes a tech stack, features list, development roadmap, and resume impact score tailored to your profile.",
+  },
+  {
+    question: "Can I save and revisit generated project ideas?",
+    answer:
+      "Yes! You can save, favorite, and export any generated project idea as a PDF. All your saved and generated ideas are stored in your dashboard for easy access anytime.",
+  },
+  {
+    question: "What does the Resume Impact Score mean?",
+    answer:
+      "The Resume Impact Score indicates how valuable a project is for your resume and portfolio. It considers industry demand, tech stack relevance, and project complexity to help you choose projects that maximize your career growth.",
+  },
+  {
+    question: "Does the AI Project Idea Generator suggest deployment options?",
+    answer:
+      "Yes. Each generated project includes deployment suggestions such as Vercel, Netlify, Railway, or AWS based on the project type, along with database recommendations and relevant API suggestions.",
+  },
 ];

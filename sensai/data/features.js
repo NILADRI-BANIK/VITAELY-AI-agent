@@ -1,27 +1,69 @@
-import { BrainCircuit, Briefcase, LineChart, ScrollText } from "lucide-react";
+import {
+  FileText,
+  BrainCircuit,
+  FileArchive,
+  FileOutput,
+  Globe,
+  TrendingUp,
+  Lightbulb,
+  Mail,
+} from "lucide-react";
 
 export const features = [
   {
+    icon: <FileText className="w-10 h-10 mb-4 text-primary" />,
+    title: "PDF to Word Converter",
+    description:
+      "Convert your PDF documents to Word instantly and save your conversion history.",
+    href: "/pdf-to-word",
+  },
+  {
     icon: <BrainCircuit className="w-10 h-10 mb-4 text-primary" />,
-    title: "AI-Powered Career Guidance",
+    title: "ATS Score Checker",
     description:
-      "Get personalized career advice and insights powered by advanced AI technology.",
+      "Check your resume ATS score instantly and get AI-powered feedback to improve it.",
+    href: "/ats-score",
   },
   {
-    icon: <Briefcase className="w-10 h-10 mb-4 text-primary" />,
-    title: "Interview Preparation",
+    icon: <FileArchive className="w-10 h-10 mb-4 text-primary" />,
+    title: "PDF Compressor",
     description:
-      "Practice with role-specific questions and get instant feedback to improve your performance.",
+      "Compress your PDF files instantly, reduce file size and download optimized PDF.",
+    href: "/pdf-compress",
   },
   {
-    icon: <LineChart className="w-10 h-10 mb-4 text-primary" />,
-    title: "Industry Insights",
+    icon: <Globe className="w-10 h-10 mb-4 text-primary" />,
+    title: "Portfolio Website Generator",
     description:
-      "Stay ahead with real-time industry trends, salary data, and market analysis.",
+      "Generate a stunning personal portfolio website instantly using AI from your resume data.",
+    href: "/portfolio-generator",
   },
   {
-    icon: <ScrollText className="w-10 h-10 mb-4 text-primary" />,
-    title: "Smart Resume Creation",
-    description: "Generate ATS-optimized resumes with AI assistance.",
+    icon: <FileOutput className="w-10 h-10 mb-4 text-primary" />,
+    title: "Word to PDF Converter",
+    description:
+      "Convert your Word documents to PDF instantly and save your conversion history.",
+    href: "/word-to-pdf",
+  },
+  {
+    icon: <TrendingUp className="w-10 h-10 mb-4 text-primary" />,
+    title: "Skill Gap Analyzer",
+    description:
+      "Identify missing skills for your dream job and get a personalized learning roadmap.",
+    href: "/skill-gap",
+  },
+  {
+    icon: <Lightbulb className="w-10 h-10 mb-4 text-primary" />,
+    title: "AI Project Idea Generator",
+    description:
+      "Get personalized project ideas based on your skills, experience, and career goals.",
+    href: "/project-ideas",
+  },
+  {
+    icon: <Mail className="w-10 h-10 mb-4 text-primary" />,
+    title: "AI Email Writer",
+    description:
+      "Write professional job application emails, follow-ups, and thank you notes using AI.",
+    href: "/email-writer",
   },
 ];

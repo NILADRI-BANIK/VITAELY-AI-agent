@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useRef, useEffect } from "react";
+import { Sparkles } from "lucide-react";
 
 const HeroSection = () => {
   const imageRef = useRef(null);
@@ -36,7 +37,6 @@ const HeroSection = () => {
             <br />
             Professional Success
           </h1>
-
           <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl">
             Advance your career with personalized guidance, interview prep, and
             AI-powered tools for job success.

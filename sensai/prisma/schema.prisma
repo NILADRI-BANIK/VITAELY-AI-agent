@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -16,7 +10,7 @@ datasource db {
 model User {
   id              String           @id @default(uuid())
   clerkUserId     String           @unique
-  email           String           @unique
+  email           String           @unique @db.VarChar(255)
   name            String?
   imageUrl        String?
   industry        String?
@@ -28,9 +22,21 @@ model User {
   experience Int?
   skills     String[]
 
-  assessments Assessment[]
-  resumes     Resume[]      // ← CHANGED: was `resume Resume?` now `resumes Resume[]` (array)
-  coverLetter CoverLetter[]
+  assessments      Assessment[]
+  resumes          Resume[]
+  coverLetter      CoverLetter[]
+  conversions      ConversionRecord[]
+  atsRecords       ATSRecord[]
+  compressions     CompressionRecord[]
+  emailRecords     EmailRecord[]
+  portfolios       Portfolio[]
+  projectIdeas     ProjectIdea[]
+  savedProjects    SavedProject[]
+  projectHistory   ProjectHistory[]
+  favoriteProjects FavoriteProject[]
+  projectExports   ProjectExport[]
+  skillGapAnalyses SkillGapAnalysis[]
+  skillProgress    SkillProgress[]
 }
 
 model Assessment {
@@ -49,19 +55,17 @@ model Assessment {
 
 model Resume {
   id               String   @id @default(cuid())
-  userId           String   // ← CHANGED: removed @unique so one user can have many resumes
+  userId           String
   user             User     @relation(fields: [userId], references: [id])
-  title            String   @default("Untitled Resume") // ← NEW LINE 1: resume title
+  title            String   @default("Untitled Resume")
   content          String   @db.Text
-  formData         Json?                                // ← NEW LINE 2: stores form fields as JSON
+  formData         Json?
   profileImage     String?
   selectedTemplate String   @default("classic")
-  atsScore         Float?
-  feedback         String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
-  @@index([userId])                                    // ← NEW LINE 3: index for fast user queries
+  @@index([userId])
 }
 
 model CoverLetter {
@@ -97,6 +101,251 @@ model IndustryInsight {
   nextUpdate  DateTime
 
   @@index([industry])
+}
+
+model ConversionRecord {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  fileName  String
+  fileSize  Int
+  status    String   @default("success")
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model ATSRecord {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  resumeId    String?
+  resumeTitle String?
+  atsScore    Float
+  feedback    String   @db.Text
+  suggestions String[]
+  keywords    String[]
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+}
+
+model CompressionRecord {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+  fileName         String
+  originalSize     Int
+  compressedSize   Int
+  savedPercentage  Float
+  compressionLevel String   @default("medium")
+  status           String   @default("success")
+  createdAt        DateTime @default(now())
+
+  @@index([userId])
+}
+
+model EmailRecord {
+  id             String            @id @default(cuid())
+  userId         String
+  user           User              @relation(fields: [userId], references: [id])
+  prompt         String            @db.Text
+  tone           String
+  length         String
+  recipientName  String?
+  companyName    String?
+  jobRole        String?
+  skills         String?
+  signature      String?
+  purpose        String
+  generatedEmail String            @db.Text
+  receiverEmail  String?
+  attachments    EmailAttachment[]
+  createdAt      DateTime          @default(now())
+
+  @@index([userId])
+}
+
+model EmailAttachment {
+  id            String      @id @default(cuid())
+  emailRecordId String
+  emailRecord   EmailRecord @relation(fields: [emailRecordId], references: [id], onDelete: Cascade)
+  fileName      String
+  fileUrl       String
+  fileType      String?
+  fileSize      Int?
+  createdAt     DateTime    @default(now())
+
+  @@index([emailRecordId])
+}
+
+model Portfolio {
+  id               String  @id @default(cuid())
+  userId           String
+  user             User    @relation(fields: [userId], references: [id])
+  title            String  @default("My Portfolio")
+  slug             String? @unique
+  templateId       String  @default("modern")
+  theme            String  @default("dark")
+  status           String  @default("draft")
+  isPublic         Boolean @default(false)
+  deployedUrl      String?
+  thumbnail        String?
+  parsedResumeData Json?
+
+  // Personal Info
+  fullName          String?
+  professionalTitle String?
+  summary           String? @db.Text
+  profileImage      String?
+  email             String?
+  phone             String?
+  address           String?
+
+  // Social Links
+  linkedin     String?
+  github       String?
+  twitter      String?
+  portfolioUrl String?
+  leetcode     String?
+  hackerrank   String?
+  codeforces   String?
+
+  // Data stored as JSON arrays
+  skills         Json?
+  hobbies        Json?
+  experience     Json?
+  education      Json?
+  projects       Json?
+  certifications Json?
+  achievements   Json?
+
+  // Generated portfolio data
+  generatedData Json?
+  generatedCode String? @db.Text
+
+  // Resume source
+  resumeUrl      String?
+  resumeFileName String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model ProjectIdea {
+  id                     String   @id @default(cuid())
+  userId                 String
+  user                   User     @relation(fields: [userId], references: [id])
+  title                  String
+  description            String   @db.Text
+  techStack              Json
+  features               String[]
+  difficulty             String
+  duration               String
+  learningOutcomes       String[]
+  roadmap                Json?
+  resumeScore            Float?
+  industryDemand         String?
+  deploymentSuggestions  String[]
+  databaseRecommendation String?
+  apiRecommendations     String[]
+  erDiagram              String?  @db.Text
+  interviewQuestions     String[]
+  githubStructure        String?  @db.Text
+  readme                 String?  @db.Text
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  saved     SavedProject[]
+  favorites FavoriteProject[]
+  exports   ProjectExport[]
+
+  @@index([userId])
+}
+
+model SavedProject {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
+  projectIdeaId String
+  projectIdea   ProjectIdea @relation(fields: [projectIdeaId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+
+  @@index([userId])
+}
+
+model ProjectHistory {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  skills          String[]
+  experienceLevel String
+  domain          String
+  complexity      String
+  projectCount    Int
+  generatedAt     DateTime @default(now())
+
+  @@index([userId])
+}
+
+model FavoriteProject {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
+  projectIdeaId String
+  projectIdea   ProjectIdea @relation(fields: [projectIdeaId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+
+  @@index([userId])
+}
+
+model ProjectExport {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
+  projectIdeaId String
+  projectIdea   ProjectIdea @relation(fields: [projectIdeaId], references: [id], onDelete: Cascade)
+  format        String      @default("pdf")
+  exportedAt    DateTime    @default(now())
+
+  @@index([userId])
+}
+
+model SkillGapAnalysis {
+  id             String          @id @default(cuid())
+  userId         String
+  user           User            @relation(fields: [userId], references: [id])
+  targetRole     String
+  experience     String
+  currentSkills  String[]
+  matchScore     Int
+  missingSkills  String[]
+  prioritySkills Json
+  roadmap        Json
+  courses        Json
+  projects       Json
+  timeline       String
+  createdAt      DateTime        @default(now())
+  progress       SkillProgress[]
+
+  @@index([userId])
+}
+
+model SkillProgress {
+  id          String           @id @default(cuid())
+  userId      String
+  user        User             @relation(fields: [userId], references: [id])
+  analysisId  String
+  analysis    SkillGapAnalysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+  skillName   String
+  completed   Boolean          @default(false)
+  completedAt DateTime?
+  createdAt   DateTime         @default(now())
+
+  @@index([userId])
+  @@index([analysisId])
 }
 
 enum DemandLevel {
