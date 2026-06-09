@@ -16,7 +16,8 @@ import { toast } from "sonner";
 
 const PRIORITY_STYLES = {
   high: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300",
-  medium: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300",
+  medium:
+    "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300",
   low: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300",
 };
 
@@ -25,18 +26,25 @@ function normalizeSkills(skills) {
   return skills.map((s) =>
     typeof s === "string"
       ? { name: s, priority: null, category: null }
-      : { name: s.name ?? s.skill ?? "", priority: s.priority ?? null, category: s.category ?? null }
+      : {
+          name: s.name ?? s.skill ?? "",
+          priority: s.priority ?? null,
+          category: s.category ?? null,
+        },
   );
 }
 
 function buildInitialCompleted(normalizedSkills, savedProgress) {
-  if (!Array.isArray(savedProgress) || savedProgress.length === 0) return new Set();
+  if (!Array.isArray(savedProgress) || savedProgress.length === 0)
+    return new Set();
   const saved = new Set(
     savedProgress.map((p) =>
-      typeof p === "string" ? p : (p.skill ?? p.name ?? "")
-    )
+      typeof p === "string" ? p : (p.skill ?? p.name ?? ""),
+    ),
   );
-  return new Set(normalizedSkills.filter((s) => saved.has(s.name)).map((s) => s.name));
+  return new Set(
+    normalizedSkills.filter((s) => saved.has(s.name)).map((s) => s.name),
+  );
 }
 
 function ProgressBar({ value }) {
@@ -68,8 +76,8 @@ function CompletionBadge({ count, total }) {
 
 function SkillRow({ skill, index, isCompleted, isPending, onToggle }) {
   const priorityStyle = skill.priority
-    ? PRIORITY_STYLES[String(skill.priority).toLowerCase()] ??
-      "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+    ? (PRIORITY_STYLES[String(skill.priority).toLowerCase()] ??
+      "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300")
     : null;
 
   function handleKeyDown(e) {
@@ -111,7 +119,9 @@ function SkillRow({ skill, index, isCompleted, isPending, onToggle }) {
       </span>
 
       {priorityStyle && (
-        <Badge className={`text-xs border-0 px-2 py-0.5 shrink-0 ${priorityStyle}`}>
+        <Badge
+          className={`text-xs border-0 px-2 py-0.5 shrink-0 ${priorityStyle}`}
+        >
           {skill.priority}
         </Badge>
       )}
@@ -138,7 +148,7 @@ export default function ProgressTracker({
   const normalized = useMemo(() => normalizeSkills(skills), [skills]);
 
   const [completed, setCompleted] = useState(() =>
-    buildInitialCompleted(normalized, savedProgress)
+    buildInitialCompleted(normalized, savedProgress),
   );
   const [pendingSkills, setPendingSkills] = useState(new Set());
   const [, startTransition] = useTransition();
@@ -148,7 +158,7 @@ export default function ProgressTracker({
       normalized.length > 0
         ? Math.round((completed.size / normalized.length) * 100)
         : 0,
-    [completed.size, normalized.length]
+    [completed.size, normalized.length],
   );
 
   const handleToggle = useCallback(
@@ -169,9 +179,11 @@ export default function ProgressTracker({
       startTransition(async () => {
         try {
           if (analysisId) {
+            const isCompleted = next.has(skillName);
             await updateProgress({
               analysisId,
-              completedSkills: [...next],
+              skillName,
+              completed: isCompleted,
             });
           }
         } catch {
@@ -186,7 +198,7 @@ export default function ProgressTracker({
         }
       });
     },
-    [completed, pendingSkills, analysisId]
+    [completed, pendingSkills, analysisId],
   );
 
   return (
