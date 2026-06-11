@@ -7,6 +7,7 @@ import {
   TrendingUp,
   Lightbulb,
   Mail,
+  BookOpen,
 } from "lucide-react";
 
 export const features = [
@@ -65,5 +66,12 @@ export const features = [
     description:
       "Write professional job application emails, follow-ups, and thank you notes using AI.",
     href: "/email-writer",
+  },
+  {
+    icon: <BookOpen className="w-10 h-10 mb-4 text-primary" />,
+    title: "Research & Publication Hub",
+    description:
+      "Discover research topics, find papers, analyze gaps, and get step-by-step guidance to publish your research.",
+    href: "/research-hub",
   },
 ];

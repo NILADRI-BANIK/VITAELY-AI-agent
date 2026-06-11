@@ -37,6 +37,10 @@ model User {
   projectExports   ProjectExport[]
   skillGapAnalyses SkillGapAnalysis[]
   skillProgress    SkillProgress[]
+  researchSessions ResearchSession[]
+  savedPapers      SavedPaper[]
+  researchRoadmaps ResearchRoadmap[]
+  generatedTopics  GeneratedTopic[]
 }
 
 model Assessment {
@@ -346,6 +350,66 @@ model SkillProgress {
 
   @@index([userId])
   @@index([analysisId])
+}
+
+model ResearchSession {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  domain    String
+  topic     String
+  status    String   @default("active")
+  notes     String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model SavedPaper {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  title         String
+  authors       String[]
+  doi           String?
+  paperUrl      String?
+  abstract      String?  @db.Text
+  journal       String?
+  year          Int?
+  citationCount Int?
+  source        String
+  createdAt     DateTime @default(now())
+
+  @@index([userId])
+}
+
+model ResearchRoadmap {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  topic     String
+  domain    String?
+  roadmap   Json
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model GeneratedTopic {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+  domain           String
+  topic            String
+  problemStatement String   @db.Text
+  researchGap      String   @db.Text
+  keywords         String[]
+  createdAt        DateTime @default(now())
+
+  @@index([userId])
 }
 
 enum DemandLevel {
