@@ -1,0 +1,688 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String           @id @default(uuid())
+  clerkUserId     String           @unique
+  email           String           @unique @db.VarChar(255)
+  name            String?
+  imageUrl        String?
+  industry        String?
+  industryInsight IndustryInsight? @relation(fields: [industry], references: [industry])
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  bio        String?
+  experience Int?
+  skills     String[]
+
+  assessments            Assessment[]
+  resumes                Resume[]
+  coverLetter            CoverLetter[]
+  conversions            ConversionRecord[]
+  atsRecords             ATSRecord[]
+  compressions           CompressionRecord[]
+  emailRecords           EmailRecord[]
+  portfolios             Portfolio[]
+  projectIdeas           ProjectIdea[]
+  savedProjects          SavedProject[]
+  projectHistory         ProjectHistory[]
+  favoriteProjects       FavoriteProject[]
+  projectExports         ProjectExport[]
+  skillGapAnalyses       SkillGapAnalysis[]
+  skillProgress          SkillProgress[]
+  researchSessions       ResearchSession[]
+  savedPapers            SavedPaper[]
+  researchRoadmaps       ResearchRoadmap[]
+  generatedTopics        GeneratedTopic[]
+  savedDatasets          SavedDataset[]
+  savedLiteratureReviews SavedLiteratureReview[]
+  savedResearchTopics    SavedResearchTopic[]
+  workspaceSessions      WorkspaceSession[]
+  topicNotes             TopicNote[]
+  paperCollections       PaperCollection[]
+  savedResearchGaps      SavedResearchGap[]
+  savedMethodologies     SavedMethodology[]
+  methodologyExports     MethodologyExport[]
+  literatureAnalyses     LiteratureAnalysis[]
+  savedPublications      SavedPublication[]
+  citationHistory        CitationHistory[]
+  writingHistory         WritingHistory[]
+  wordToPdfRecords       WordToPdfRecord[]
+}
+
+model Assessment {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  quizScore      Float
+  questions      Json[]
+  category       String
+  improvementTip String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Resume {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+  title            String   @default("Untitled Resume")
+  content          String   @db.Text
+  formData         Json?
+  profileImage     String?
+  selectedTemplate String   @default("classic")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model CoverLetter {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+  title            String   @default("Untitled Cover Letter")
+  content          String   @db.Text
+  formData         Json?
+  template String @default("modern-professional")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model IndustryInsight {
+  id       String @id @default(cuid())
+  industry String @unique
+
+  users        User[]
+  salaryRanges Json[]
+  growthRate   Float
+  demandLevel  DemandLevel
+  topSkills    String[]
+
+  marketOutlook     MarketOutlook
+  keyTrends         String[]
+  recommendedSkills String[]
+
+  lastUpdated DateTime @default(now())
+  nextUpdate  DateTime
+
+  @@index([industry])
+}
+
+model ConversionRecord {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  fileName  String
+  fileSize  Int
+  status    String   @default("success")
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model ATSRecord {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  resumeId    String?
+  resumeTitle String?
+  atsScore    Float
+  feedback    String   @db.Text
+  suggestions String[]
+  keywords    String[]
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+}
+
+model CompressionRecord {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+  fileName         String
+  originalSize     Int
+  compressedSize   Int
+  savedPercentage  Float
+  compressionLevel String   @default("medium")
+  status           String   @default("success")
+  createdAt        DateTime @default(now())
+
+  @@index([userId])
+}
+
+model EmailRecord {
+  id             String            @id @default(cuid())
+  userId         String
+  user           User              @relation(fields: [userId], references: [id])
+  prompt         String            @db.Text
+  tone           String
+  length         String
+  recipientName  String?
+  companyName    String?
+  jobRole        String?
+  skills         String?
+  signature      String?
+  purpose        String
+  generatedEmail String            @db.Text
+  receiverEmail  String?
+  attachments    EmailAttachment[]
+  createdAt      DateTime          @default(now())
+
+  @@index([userId])
+}
+
+model EmailAttachment {
+  id            String      @id @default(cuid())
+  emailRecordId String
+  emailRecord   EmailRecord @relation(fields: [emailRecordId], references: [id], onDelete: Cascade)
+  fileName      String
+  fileUrl       String
+  fileType      String?
+  fileSize      Int?
+  createdAt     DateTime    @default(now())
+
+  @@index([emailRecordId])
+}
+
+model Portfolio {
+  id               String  @id @default(cuid())
+  userId           String
+  user             User    @relation(fields: [userId], references: [id])
+  title            String  @default("My Portfolio")
+  slug             String? @unique
+  templateId       String  @default("modern")
+  theme            String  @default("dark")
+  status           String  @default("draft")
+  isPublic         Boolean @default(false)
+  deployedUrl      String?
+  thumbnail        String?
+  parsedResumeData Json?
+
+  fullName          String?
+  professionalTitle String?
+  summary           String? @db.Text
+  profileImage      String?
+  email             String?
+  phone             String?
+  address           String?
+
+  linkedin     String?
+  github       String?
+  twitter      String?
+  portfolioUrl String?
+  leetcode     String?
+  hackerrank   String?
+  codeforces   String?
+
+  skills         Json?
+  hobbies        Json?
+  experience     Json?
+  education      Json?
+  projects       Json?
+  certifications Json?
+  achievements   Json?
+
+  generatedData Json?
+  generatedCode String? @db.Text
+
+  resumeUrl      String?
+  resumeFileName String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model ProjectIdea {
+  id                     String   @id @default(cuid())
+  userId                 String
+  user                   User     @relation(fields: [userId], references: [id])
+  title                  String
+  description            String   @db.Text
+  techStack              Json
+  features               String[]
+  difficulty             String
+  duration               String
+  learningOutcomes       String[]
+  roadmap                Json?
+  resumeScore            Float?
+  industryDemand         String?
+  deploymentSuggestions  String[]
+  databaseRecommendation String?
+  apiRecommendations     String[]
+  erDiagram              String?  @db.Text
+  interviewQuestions     String[]
+  githubStructure        String?  @db.Text
+  readme                 String?  @db.Text
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  saved     SavedProject[]
+  favorites FavoriteProject[]
+  exports   ProjectExport[]
+
+  @@index([userId])
+}
+
+model SavedProject {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
+  projectIdeaId String
+  projectIdea   ProjectIdea @relation(fields: [projectIdeaId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+
+  @@index([userId])
+}
+
+model ProjectHistory {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  skills          String[]
+  experienceLevel String
+  domain          String
+  complexity      String
+  projectCount    Int
+  generatedAt     DateTime @default(now())
+
+  @@index([userId])
+}
+
+model FavoriteProject {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
+  projectIdeaId String
+  projectIdea   ProjectIdea @relation(fields: [projectIdeaId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+
+  @@index([userId])
+}
+
+model ProjectExport {
+  id            String      @id @default(cuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
+  projectIdeaId String
+  projectIdea   ProjectIdea @relation(fields: [projectIdeaId], references: [id], onDelete: Cascade)
+  format        String      @default("pdf")
+  exportedAt    DateTime    @default(now())
+
+  @@index([userId])
+}
+
+model SkillGapAnalysis {
+  id             String          @id @default(cuid())
+  userId         String
+  user           User            @relation(fields: [userId], references: [id])
+  targetRole     String
+  experience     String
+  currentSkills  String[]
+  matchScore     Int
+  missingSkills  String[]
+  prioritySkills Json
+  roadmap        Json
+  courses        Json
+  projects       Json
+  timeline       String
+  createdAt      DateTime        @default(now())
+  progress       SkillProgress[]
+
+  @@index([userId])
+}
+
+model SkillProgress {
+  id          String           @id @default(cuid())
+  userId      String
+  user        User             @relation(fields: [userId], references: [id])
+  analysisId  String
+  analysis    SkillGapAnalysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+  skillName   String
+  completed   Boolean          @default(false)
+  completedAt DateTime?
+  createdAt   DateTime         @default(now())
+
+  @@index([userId])
+  @@index([analysisId])
+}
+
+model ResearchSession {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  domain    String
+  topic     String
+  status    String   @default("active")
+  notes     String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model SavedPaper {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  title         String
+  authors       String[]
+  doi           String?
+  paperUrl      String?
+  abstract      String?  @db.Text
+  journal       String?
+  year          Int?
+  citationCount Int?
+  source        String
+  paperId       String?
+  openAccess    Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  @@unique([userId, paperId])
+  @@index([userId])
+  @@index([doi])
+}
+
+model ResearchRoadmap {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  topic     String
+  domain    String?
+  roadmap   Json
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model GeneratedTopic {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+  domain           String
+  topic            String
+  problemStatement String   @db.Text
+  researchGap      String   @db.Text
+  keywords         String[]
+  createdAt        DateTime @default(now())
+
+  @@index([userId])
+}
+
+model SavedDataset {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  datasetId     String
+  title         String
+  description   String?  @db.Text
+  url           String?
+  source        String
+  tags          String[]
+  license       String?
+  downloadCount Int      @default(0)
+  createdAt     DateTime @default(now())
+
+  @@unique([userId, datasetId])
+  @@index([userId])
+}
+
+model ResearchCache {
+  id        String   @id @default(cuid())
+  cacheKey  String   @unique
+  data      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([cacheKey])
+}
+
+model SavedLiteratureReview {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  topic      String
+  reviewData Json
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model SavedResearchTopic {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+  topicName        String
+  rationale        String   @db.Text
+  keywords         String[]
+  paperCount       Int      @default(0)
+  trendScore       Int?
+  noveltyScore     Int?
+  feasibilityScore Int?
+  competitionLevel String?
+  hasDataset       Boolean  @default(false)
+  openAccessRatio  Float?
+  domainId         String?
+  subfieldId       String?
+  createdAt        DateTime @default(now())
+
+  workspaceSession WorkspaceSession?
+  notes            TopicNote[]
+  paperCollections PaperCollection[]
+
+  @@index([userId])
+}
+
+model WorkspaceSession {
+  id              String             @id @default(cuid())
+  userId          String
+  user            User               @relation(fields: [userId], references: [id])
+  savedTopicId    String             @unique
+  savedTopic      SavedResearchTopic @relation(fields: [savedTopicId], references: [id], onDelete: Cascade)
+  openedPapers    Json?
+  viewedVideos    Json?
+  comparedTopics  Json?
+  methodologyDone Boolean            @default(false)
+  gapAnalysisDone Boolean            @default(false)
+  roadmapDone     Boolean            @default(false)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@index([userId])
+}
+
+model TopicNote {
+  id           String             @id @default(cuid())
+  userId       String
+  user         User               @relation(fields: [userId], references: [id])
+  savedTopicId String
+  savedTopic   SavedResearchTopic @relation(fields: [savedTopicId], references: [id], onDelete: Cascade)
+  content      String             @db.Text
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  @@index([userId])
+  @@index([savedTopicId])
+}
+
+model PaperCollection {
+  id           String             @id @default(cuid())
+  userId       String
+  user         User               @relation(fields: [userId], references: [id])
+  savedTopicId String
+  savedTopic   SavedResearchTopic @relation(fields: [savedTopicId], references: [id], onDelete: Cascade)
+  paperId      String
+  title        String
+  collection   String             @default("reading_list")
+  createdAt    DateTime           @default(now())
+
+  @@unique([userId, savedTopicId, paperId, collection])
+  @@index([userId])
+  @@index([savedTopicId])
+}
+
+model SavedResearchGap {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  gapTitle        String
+  description     String   @db.Text
+  why             String   @db.Text
+  keywords        String[]
+  difficulty      String   @default("medium")
+  openAlexCount   Int      @default(0)
+  semanticCount   Int      @default(0)
+  totalPaperCount Int      @default(0)
+  score           Float    @default(0)
+  createdAt       DateTime @default(now())
+  type            String   @default("gap")
+  domain          String?
+  opportunity     String?  @db.Text
+  collection      String   @default("saved")
+  notes           String?  @db.Text
+  impactScore     Float    @default(0)
+  confidence      Int      @default(70)
+
+  @@index([userId])
+}
+
+model SavedMethodology {
+  id                String   @id @default(cuid())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id])
+  topic             String
+  methodologyType   String
+  researchDesign    String?
+  samplingTechnique String?
+  targetPopulation  String?
+  sampleSize        Int?
+  confidenceScore   Int?
+  status            String   @default("draft")
+  version           Int      @default(1)
+  methodologyData   Json
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  exports MethodologyExport[]
+
+  @@index([userId])
+}
+
+model MethodologyExport {
+  id            String           @id @default(cuid())
+  userId        String
+  user          User             @relation(fields: [userId], references: [id])
+  methodologyId String
+  methodology   SavedMethodology @relation(fields: [methodologyId], references: [id], onDelete: Cascade)
+  format        String
+  exportedAt    DateTime         @default(now())
+  publicId      String?
+  url           String?
+
+  @@index([userId])
+  @@index([methodologyId])
+}
+
+model LiteratureAnalysis {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id])
+  topic           String
+  methodologyType String?
+  paperCount      Int      @default(0)
+  analysisData    Json
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model SavedPublication {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  publicationId String
+  title         String
+  publisher     String?
+  issn          String?
+  url           String?
+  openAccess    Boolean  @default(false)
+  type          String
+  source        String
+  subjects      String[]
+  createdAt     DateTime @default(now())
+
+  @@unique([userId, publicationId])
+  @@index([userId])
+}
+
+model CitationHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  doi       String?
+  title     String
+  authors   String[]
+  year      Int?
+  journal   String?
+  source    String
+  citations Json
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([doi])
+}
+
+model WritingHistory {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  mode         String
+  originalText String   @db.Text
+  resultText   String   @db.Text
+  metadata     Json?
+  createdAt    DateTime @default(now())
+
+  @@index([userId])
+}
+
+model WordToPdfRecord {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  fileName     String
+  fileSize     Int
+  status       String   @default("success")
+  createdAt    DateTime @default(now())
+
+  @@index([userId])
+}
+
+enum DemandLevel {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum MarketOutlook {
+  POSITIVE
+  NEUTRAL
+  NEGATIVE
+}

@@ -1,0 +1,804 @@
+{
+  "categories": [
+    {
+      "id": "literature-search",
+      "label": "Literature Search",
+      "icon": "Search",
+      "order": 1,
+      "tools": [
+        {
+          "id": "semantic-scholar",
+          "name": "Semantic Scholar",
+          "description": "AI-powered research tool for scientific literature with citation graphs and paper summaries.",
+          "url": "https://www.semanticscholar.org",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": true,
+          "tags": ["papers", "citations", "AI", "search"],
+          "category": "literature-search"
+        },
+        {
+          "id": "openalex",
+          "name": "OpenAlex",
+          "description": "Open catalog of scholarly papers, authors, institutions, and concepts.",
+          "url": "https://openalex.org",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": true,
+          "tags": ["papers", "open-access", "metadata"],
+          "category": "literature-search"
+        },
+        {
+          "id": "arxiv",
+          "name": "arXiv",
+          "description": "Open-access repository of preprints in CS, Math, Physics, and more.",
+          "url": "https://arxiv.org",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": true,
+          "tags": ["preprints", "CS", "math", "physics"],
+          "category": "literature-search"
+        },
+        {
+          "id": "crossref",
+          "name": "Crossref",
+          "description": "DOI registration and metadata lookup for academic publications.",
+          "url": "https://www.crossref.org",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": false,
+          "tags": ["DOI", "metadata", "citations"],
+          "category": "literature-search"
+        },
+        {
+          "id": "google-scholar",
+          "name": "Google Scholar",
+          "description": "Freely accessible web search engine for scholarly literature.",
+          "url": "https://scholar.google.com",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["search", "citations", "papers"],
+          "category": "literature-search"
+        },
+        {
+          "id": "pubmed",
+          "name": "PubMed",
+          "description": "Free search engine for biomedical and life sciences literature.",
+          "url": "https://pubmed.ncbi.nlm.nih.gov",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": false,
+          "tags": ["biomedical", "health", "life-sciences"],
+          "category": "literature-search"
+        },
+        {
+          "id": "core",
+          "name": "CORE",
+          "description": "Aggregates open-access research papers from repositories worldwide.",
+          "url": "https://core.ac.uk",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": false,
+          "tags": ["open-access", "aggregator", "papers"],
+          "category": "literature-search"
+        },
+        {
+          "id": "unpaywall",
+          "name": "Unpaywall",
+          "description": "Finds free legal full-text versions of research papers by DOI.",
+          "url": "https://unpaywall.org",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": false,
+          "tags": ["open-access", "full-text", "DOI"],
+          "category": "literature-search"
+        }
+      ]
+    },
+    {
+      "id": "ai-writing",
+      "label": "AI Writing & Editing",
+      "icon": "PenTool",
+      "order": 2,
+      "tools": [
+        {
+          "id": "grammarly",
+          "name": "Grammarly",
+          "description": "AI writing assistant for grammar, clarity, and academic tone improvement.",
+          "url": "https://www.grammarly.com",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["writing", "grammar", "editing"],
+          "category": "ai-writing"
+        },
+        {
+          "id": "quillbot",
+          "name": "QuillBot",
+          "description": "AI paraphrasing and summarization tool for academic writing.",
+          "url": "https://quillbot.com",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["paraphrase", "summarize", "writing"],
+          "category": "ai-writing"
+        },
+        {
+          "id": "writefull",
+          "name": "Writefull",
+          "description": "AI language feedback tool designed specifically for academic writing.",
+          "url": "https://writefull.com",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["academic", "writing", "feedback"],
+          "category": "ai-writing"
+        },
+        {
+          "id": "paperpal",
+          "name": "Paperpal",
+          "description": "AI writing tool tailored for research papers and journal submissions.",
+          "url": "https://paperpal.com",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["papers", "journal", "writing"],
+          "category": "ai-writing"
+        },
+        {
+          "id": "jenni-ai",
+          "name": "Jenni AI",
+          "description": "AI research writing assistant with citation support and autocomplete.",
+          "url": "https://jenni.ai",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["writing", "citations", "autocomplete"],
+          "category": "ai-writing"
+        },
+        {
+          "id": "scispace",
+          "name": "SciSpace",
+          "description": "AI-powered tool to read, understand, and write research papers with inline explanations.",
+          "url": "https://typeset.io",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": true,
+          "tags": ["writing", "reading", "AI", "papers"],
+          "category": "ai-writing"
+        }
+      ]
+    },
+    {
+      "id": "reference-management",
+      "label": "Reference Management",
+      "icon": "BookOpen",
+      "order": 3,
+      "tools": [
+        {
+          "id": "zotero",
+          "name": "Zotero",
+          "description": "Free, open-source reference manager for collecting and citing research.",
+          "url": "https://www.zotero.org",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": true,
+          "tags": ["references", "citations", "open-source"],
+          "category": "reference-management"
+        },
+        {
+          "id": "mendeley",
+          "name": "Mendeley",
+          "description": "Reference manager and academic social network by Elsevier.",
+          "url": "https://www.mendeley.com",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["references", "PDF", "collaboration"],
+          "category": "reference-management"
+        },
+        {
+          "id": "endnote",
+          "name": "EndNote",
+          "description": "Professional reference management software for researchers.",
+          "url": "https://endnote.com",
+          "pricing": "paid",
+          "freeTier": false,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["references", "professional", "citations"],
+          "category": "reference-management"
+        },
+        {
+          "id": "paperpile",
+          "name": "Paperpile",
+          "description": "Reference manager integrated with Google Docs and Google Scholar.",
+          "url": "https://paperpile.com",
+          "pricing": "paid",
+          "freeTier": false,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["references", "google-docs", "chrome"],
+          "category": "reference-management"
+        },
+        {
+          "id": "cite-this-for-me",
+          "name": "Cite This For Me",
+          "description": "Free online citation generator supporting APA, MLA, Harvard, and 1000+ styles.",
+          "url": "https://www.citethisforme.com",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["citations", "APA", "MLA", "generator"],
+          "category": "reference-management"
+        }
+      ]
+    },
+    {
+      "id": "data-analysis",
+      "label": "Data Analysis & Visualization",
+      "icon": "BarChart2",
+      "order": 4,
+      "tools": [
+        {
+          "id": "jupyter",
+          "name": "Jupyter Notebook",
+          "description": "Open-source interactive computing environment for data analysis and research.",
+          "url": "https://jupyter.org",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["notebooks", "Python", "data-science"],
+          "category": "data-analysis"
+        },
+        {
+          "id": "google-colab",
+          "name": "Google Colab",
+          "description": "Free cloud-based Jupyter notebook with GPU access for ML research.",
+          "url": "https://colab.research.google.com",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["notebooks", "GPU", "cloud", "ML"],
+          "category": "data-analysis"
+        },
+        {
+          "id": "kaggle-notebooks",
+          "name": "Kaggle Notebooks",
+          "description": "Free cloud notebooks with datasets and GPU/TPU access for ML experiments.",
+          "url": "https://www.kaggle.com/code",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["notebooks", "datasets", "ML", "GPU"],
+          "category": "data-analysis"
+        },
+        {
+          "id": "tableau-public",
+          "name": "Tableau Public",
+          "description": "Free data visualization platform for creating and sharing charts.",
+          "url": "https://public.tableau.com",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["visualization", "charts", "dashboards"],
+          "category": "data-analysis"
+        },
+        {
+          "id": "orange",
+          "name": "Orange",
+          "description": "Open-source data mining and machine learning toolkit with visual interface.",
+          "url": "https://orangedatamining.com",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["data-mining", "ML", "visual", "open-source"],
+          "category": "data-analysis"
+        }
+      ]
+    },
+    {
+      "id": "ai-research-assistants",
+      "label": "AI Research Assistants",
+      "icon": "Bot",
+      "order": 5,
+      "tools": [
+        {
+          "id": "elicit",
+          "name": "Elicit",
+          "description": "AI research assistant that finds and summarizes relevant papers automatically.",
+          "url": "https://elicit.com",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": true,
+          "tags": ["AI", "summarization", "papers", "assistant"],
+          "category": "ai-research-assistants"
+        },
+        {
+          "id": "consensus",
+          "name": "Consensus",
+          "description": "AI search engine that extracts findings directly from research papers.",
+          "url": "https://consensus.app",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": true,
+          "tags": ["AI", "search", "findings", "evidence"],
+          "category": "ai-research-assistants"
+        },
+        {
+          "id": "scite",
+          "name": "Scite",
+          "description": "AI tool that shows how papers have been cited with context and sentiment.",
+          "url": "https://scite.ai",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": false,
+          "tags": ["citations", "AI", "context", "smart"],
+          "category": "ai-research-assistants"
+        },
+        {
+          "id": "connected-papers",
+          "name": "Connected Papers",
+          "description": "Visual graph tool to explore and find related academic papers.",
+          "url": "https://www.connectedpapers.com",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["graph", "visual", "related-papers"],
+          "category": "ai-research-assistants"
+        },
+        {
+          "id": "research-rabbit",
+          "name": "ResearchRabbit",
+          "description": "Free AI tool for discovering related papers and building literature maps.",
+          "url": "https://www.researchrabbit.ai",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["AI", "discovery", "literature-map"],
+          "category": "ai-research-assistants"
+        },
+        {
+          "id": "perplexity",
+          "name": "Perplexity AI",
+          "description": "AI-powered search engine with cited answers for research questions.",
+          "url": "https://www.perplexity.ai",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["AI", "search", "citations", "QA"],
+          "category": "ai-research-assistants"
+        },
+        {
+          "id": "undermind",
+          "name": "Undermind",
+          "description": "Deep AI research agent that thoroughly searches scientific literature.",
+          "url": "https://www.undermind.ai",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["AI", "deep-search", "literature"],
+          "category": "ai-research-assistants"
+        }
+      ]
+    },
+    {
+      "id": "dataset-discovery",
+      "label": "Dataset Discovery",
+      "icon": "Database",
+      "order": 6,
+      "tools": [
+        {
+          "id": "kaggle-datasets",
+          "name": "Kaggle Datasets",
+          "description": "Largest community platform for ML datasets, notebooks, and competitions.",
+          "url": "https://www.kaggle.com/datasets",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": true,
+          "tags": ["datasets", "ML", "competitions"],
+          "category": "dataset-discovery"
+        },
+        {
+          "id": "huggingface-datasets",
+          "name": "Hugging Face Datasets",
+          "description": "Hub for NLP, CV, audio, and multimodal AI datasets with easy API access.",
+          "url": "https://huggingface.co/datasets",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": false,
+          "tags": ["NLP", "CV", "AI", "datasets"],
+          "category": "dataset-discovery"
+        },
+        {
+          "id": "zenodo",
+          "name": "Zenodo",
+          "description": "Open-access research data repository hosted by CERN.",
+          "url": "https://zenodo.org",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": false,
+          "tags": ["open-access", "research-data", "CERN"],
+          "category": "dataset-discovery"
+        },
+        {
+          "id": "google-dataset-search",
+          "name": "Google Dataset Search",
+          "description": "Search engine for finding datasets stored across the web.",
+          "url": "https://datasetsearch.research.google.com",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["search", "datasets", "web"],
+          "category": "dataset-discovery"
+        },
+        {
+          "id": "uci-ml",
+          "name": "UCI ML Repository",
+          "description": "Classic repository of datasets for machine learning research.",
+          "url": "https://archive.ics.uci.edu",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["ML", "classic", "benchmark"],
+          "category": "dataset-discovery"
+        },
+        {
+          "id": "openml",
+          "name": "OpenML",
+          "description": "Open platform for sharing datasets, tasks, and ML experiments.",
+          "url": "https://www.openml.org",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": false,
+          "tags": ["ML", "open-source", "experiments"],
+          "category": "dataset-discovery"
+        }
+      ]
+    },
+    {
+      "id": "journal-conference",
+      "label": "Journal & Conference Finder",
+      "icon": "Bookmark",
+      "order": 7,
+      "tools": [
+        {
+          "id": "doaj",
+          "name": "DOAJ",
+          "description": "Directory of Open Access Journals for finding peer-reviewed OA journals.",
+          "url": "https://doaj.org",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": false,
+          "tags": ["journals", "open-access", "peer-reviewed"],
+          "category": "journal-conference"
+        },
+        {
+          "id": "dblp",
+          "name": "DBLP",
+          "description": "Computer science bibliography with conferences, journals, and author profiles.",
+          "url": "https://dblp.org",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": false,
+          "tags": ["CS", "conferences", "bibliography"],
+          "category": "journal-conference"
+        },
+        {
+          "id": "scimago",
+          "name": "SCImago Journal Rank",
+          "description": "Portal with journal rankings and scientific indicators from Scopus data.",
+          "url": "https://www.scimagojr.com",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["rankings", "journals", "impact-factor"],
+          "category": "journal-conference"
+        },
+        {
+          "id": "springer-journal-suggester",
+          "name": "Springer Journal Suggester",
+          "description": "Helps authors find the right Springer journal for their research.",
+          "url": "https://journalsuggester.springer.com",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["Springer", "journal-finder", "submission"],
+          "category": "journal-conference"
+        },
+        {
+          "id": "ieee-xplore",
+          "name": "IEEE Xplore",
+          "description": "Digital library for IEEE journals, conferences, and standards in tech and engineering.",
+          "url": "https://ieeexplore.ieee.org",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": false,
+          "tags": ["IEEE", "engineering", "CS", "journals"],
+          "category": "journal-conference"
+        },
+        {
+          "id": "acm-dl",
+          "name": "ACM Digital Library",
+          "description": "Full-text database of ACM publications in computing and IT.",
+          "url": "https://dl.acm.org",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["ACM", "computing", "CS", "journals"],
+          "category": "journal-conference"
+        }
+      ]
+    },
+    {
+      "id": "plagiarism-integrity",
+      "label": "Plagiarism & Integrity",
+      "icon": "ShieldCheck",
+      "order": 8,
+      "tools": [
+        {
+          "id": "turnitin",
+          "name": "Turnitin",
+          "description": "Industry-standard plagiarism detection used by institutions worldwide.",
+          "url": "https://www.turnitin.com",
+          "pricing": "paid",
+          "freeTier": false,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["plagiarism", "detection", "academic-integrity"],
+          "category": "plagiarism-integrity"
+        },
+        {
+          "id": "ithenticate",
+          "name": "iThenticate",
+          "description": "Plagiarism detection tool designed for researchers and publishers.",
+          "url": "https://www.ithenticate.com",
+          "pricing": "paid",
+          "freeTier": false,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["plagiarism", "research", "publishers"],
+          "category": "plagiarism-integrity"
+        },
+        {
+          "id": "copyleaks",
+          "name": "Copyleaks",
+          "description": "AI-powered plagiarism and AI-content detection platform.",
+          "url": "https://copyleaks.com",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": false,
+          "tags": ["plagiarism", "AI-detection", "academic"],
+          "category": "plagiarism-integrity"
+        },
+        {
+          "id": "small-seo-tools",
+          "name": "Small SEO Tools Plagiarism Checker",
+          "description": "Free online plagiarism checker for quick content verification.",
+          "url": "https://smallseotools.com/plagiarism-checker",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["plagiarism", "free", "online"],
+          "category": "plagiarism-integrity"
+        },
+        {
+          "id": "rayyan",
+          "name": "Rayyan",
+          "description": "AI-powered systematic review tool with duplicate detection and collaboration features.",
+          "url": "https://www.rayyan.ai",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["systematic-review", "AI", "collaboration", "integrity"],
+          "category": "plagiarism-integrity"
+        }
+      ]
+    },
+    {
+      "id": "research-productivity",
+      "label": "Research Productivity",
+      "icon": "Zap",
+      "order": 9,
+      "tools": [
+        {
+          "id": "notion",
+          "name": "Notion",
+          "description": "All-in-one workspace for notes, databases, and research project management.",
+          "url": "https://www.notion.so",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": false,
+          "tags": ["notes", "project-management", "workspace"],
+          "category": "research-productivity"
+        },
+        {
+          "id": "obsidian",
+          "name": "Obsidian",
+          "description": "Markdown-based knowledge management with bidirectional linking for researchers.",
+          "url": "https://obsidian.md",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["notes", "knowledge-graph", "markdown"],
+          "category": "research-productivity"
+        },
+        {
+          "id": "overleaf",
+          "name": "Overleaf",
+          "description": "Online LaTeX editor for writing and collaborating on research papers.",
+          "url": "https://www.overleaf.com",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": true,
+          "tags": ["LaTeX", "writing", "collaboration"],
+          "category": "research-productivity"
+        },
+        {
+          "id": "trello",
+          "name": "Trello",
+          "description": "Kanban-style project management tool for organizing research tasks.",
+          "url": "https://trello.com",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": false,
+          "tags": ["kanban", "project-management", "tasks"],
+          "category": "research-productivity"
+        },
+        {
+          "id": "datahub",
+          "name": "DataHub",
+          "description": "Open-source metadata platform for data discovery, governance, and lineage tracking.",
+          "url": "https://datahubproject.io",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": false,
+          "tags": ["metadata", "data-governance", "open-source", "research-data"],
+          "category": "research-productivity"
+        }
+      ]
+    },
+    {
+      "id": "ml-experimentation",
+      "label": "ML Experimentation",
+      "icon": "FlaskConical",
+      "order": 10,
+      "tools": [
+        {
+          "id": "wandb",
+          "name": "Weights & Biases",
+          "description": "MLOps platform for experiment tracking, visualization, and model management.",
+          "url": "https://wandb.ai",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": true,
+          "tags": ["MLOps", "experiment-tracking", "visualization"],
+          "category": "ml-experimentation"
+        },
+        {
+          "id": "mlflow",
+          "name": "MLflow",
+          "description": "Open-source platform for managing the ML lifecycle including experiments.",
+          "url": "https://mlflow.org",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": false,
+          "tags": ["MLOps", "open-source", "experiment-tracking"],
+          "category": "ml-experimentation"
+        },
+        {
+          "id": "huggingface-hub",
+          "name": "Hugging Face Hub",
+          "description": "Platform for sharing and discovering ML models, datasets, and demos.",
+          "url": "https://huggingface.co",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": false,
+          "tags": ["models", "NLP", "transformers", "hub"],
+          "category": "ml-experimentation"
+        },
+        {
+          "id": "paperswithcode",
+          "name": "Papers With Code",
+          "description": "Links ML research papers with their code implementations and benchmarks.",
+          "url": "https://paperswithcode.com",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": false,
+          "tags": ["papers", "code", "benchmarks", "SOTA"],
+          "category": "ml-experimentation"
+        },
+        {
+          "id": "neptune-ai",
+          "name": "Neptune.ai",
+          "description": "Metadata store for MLOps with experiment tracking and model registry.",
+          "url": "https://neptune.ai",
+          "pricing": "freemium",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": false,
+          "tags": ["MLOps", "metadata", "experiment-tracking"],
+          "category": "ml-experimentation"
+        },
+        {
+          "id": "dvc",
+          "name": "DVC",
+          "description": "Open-source version control system for ML models, data, and experiments.",
+          "url": "https://dvc.org",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": false,
+          "featured": false,
+          "tags": ["version-control", "ML", "open-source", "pipelines"],
+          "category": "ml-experimentation"
+        },
+        {
+          "id": "gradio",
+          "name": "Gradio",
+          "description": "Open-source library to build and share ML demo apps and model interfaces instantly.",
+          "url": "https://www.gradio.app",
+          "pricing": "free",
+          "freeTier": true,
+          "hasApi": true,
+          "featured": false,
+          "tags": ["demo", "ML", "UI", "open-source", "deployment"],
+          "category": "ml-experimentation"
+        }
+      ]
+    }
+  ]
+}
