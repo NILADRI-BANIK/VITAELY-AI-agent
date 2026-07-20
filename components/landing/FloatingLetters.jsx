@@ -2,6 +2,12 @@
 
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Uncial_Antiqua } from "next/font/google";
+
+const uncial = Uncial_Antiqua({
+  subsets: ["latin"],
+  weight: "400",
+});
 
 const LETTERS = [
   { char: "V", label: "Vision", desc: "Clarity on the career you're building toward" },
@@ -21,6 +27,11 @@ const LETTERS = [
  * continuously around the letters, and a shimmer sweeps across the
  * text every few seconds. Each letter reveals a tooltip on hover.
  * Purely presentational — no navigation/routing.
+ *
+ * Letter font: Uncial Antiqua (medieval manuscript style) — applied
+ * only to the letter glyphs themselves via `uncial.className`. Drop
+ * animation, hover tooltip, orbit particles, pulse, and shimmer are
+ * all unchanged from before.
  */
 export default function FloatingLetters({ className = "" }) {
   const [hovered, setHovered] = useState(null);
@@ -69,15 +80,23 @@ export default function FloatingLetters({ className = "" }) {
             }}
             onMouseEnter={() => setHovered(i)}
             onMouseLeave={() => setHovered((cur) => (cur === i ? null : cur))}
-            className="relative inline-block font-serif text-5xl md:text-7xl lg:text-8xl font-bold text-white cursor-default transition-transform duration-200 hover:scale-110"
-            style={{
-              textShadow:
-                hovered === i
-                  ? "0 0 28px rgba(0,229,160,0.85), 0 0 50px rgba(108,99,255,0.5)"
-                  : "0 0 20px rgba(108,99,255,0.6), 0 0 40px rgba(0,229,160,0.25)",
-            }}
+            className="relative inline-block cursor-default"
           >
-            {char}
+            {/* Letter glyph — ONLY this element gets Uncial Antiqua.
+                Kept as its own span (not a shared wrapper) so nothing
+                else can inherit the medieval font by accident. */}
+            <span
+              className={`${uncial.className} relative inline-block text-4xl md:text-6xl lg:text-7xl font-normal text-white transition-transform duration-200 hover:scale-110`}
+              style={{
+                letterSpacing: "0.1em",
+                textShadow:
+                  hovered === i
+                    ? "0 0 10px rgba(108,99,255,.5), 0 0 22px rgba(108,99,255,.35), 0 0 34px rgba(0,229,160,.22)"
+                    : "0 0 10px rgba(108,99,255,.45), 0 0 25px rgba(108,99,255,.35), 0 0 40px rgba(0,229,160,.18)",
+              }}
+            >
+              {char}
+            </span>
 
             {/* orbiting particles, active once landed */}
             {orbitParticles[i].map((p, pi) => (
@@ -112,6 +131,9 @@ export default function FloatingLetters({ className = "" }) {
               />
             ))}
 
+            {/* Tooltip — deliberately OUTSIDE the Uncial-fonted span above,
+                so it cannot inherit that font-family at all. Explicit
+                fontFamily reset added as a second safeguard regardless. */}
             <AnimatePresence>
               {hovered === i && (
                 <motion.div
@@ -119,12 +141,19 @@ export default function FloatingLetters({ className = "" }) {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: 8, scale: 0.95 }}
                   transition={{ duration: 0.18 }}
+                  style={{ fontFamily: "var(--font-sans, ui-sans-serif, system-ui, sans-serif)" }}
                   className="pointer-events-none absolute left-1/2 -translate-x-1/2 -bottom-2 translate-y-full z-30 w-max max-w-[200px] rounded-xl border border-white/10 bg-[#0D1017]/95 backdrop-blur-md px-4 py-2.5 text-left shadow-2xl"
                 >
-                  <p className="text-xs font-sans font-semibold text-[#00E5A0] tracking-wide">
+                  <p
+                    className="text-xs font-semibold text-[#00E5A0] tracking-wide"
+                    style={{ fontFamily: "inherit" }}
+                  >
                     {label}
                   </p>
-                  <p className="mt-1 text-[11px] font-sans font-normal leading-snug text-white/60">
+                  <p
+                    className="mt-1 text-[11px] font-normal leading-snug text-white/60"
+                    style={{ fontFamily: "inherit" }}
+                  >
                     {desc}
                   </p>
                 </motion.div>

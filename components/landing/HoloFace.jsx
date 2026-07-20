@@ -201,12 +201,100 @@ function AtmosphereLayer() {
 }
 
 /**
+ * HoloRing — DOM/CSS layer (not a Three.js object), positioned behind
+ * the Canvas, centered on the AI head. Two concentric monochrome
+ * meander-pattern rings rotating in opposite directions, styled as a
+ * faint holographic halo rather than a colorful focal element:
+ * - off-white/light-gray tint (no purple/cyan fill on the ring itself)
+ * - subtle violet outer glow + cyan inner glow via drop-shadow only
+ * - low opacity (~25%) so the AI head remains the clear subject
+ * - slight blur to blend into the hero background
+ * - sized to ~60-65% of its previous footprint so it wraps closely
+ *   around the head instead of dominating the section
+ * Purely decorative — no pointer events, doesn't affect mouse-follow
+ * tracking on the head (that listens on `window`, not this element).
+ */
+function HoloRing() {
+  const ringGlowFilter =
+    "drop-shadow(0 0 8px rgba(139,133,255,0.28)) drop-shadow(0 0 5px rgba(76,201,255,0.18)) blur(1.2px)";
+
+  return (
+    <div
+      className="pointer-events-none absolute left-1/2 top-1/2 -z-10 flex items-center justify-center"
+      style={{
+        width: "95%",
+        height: "95%",
+        transform: "translate(-50%, -50%)",
+      }}
+    >
+      {/* Outer ring — clockwise, 22s */}
+      <motion.svg
+        viewBox="0 0 400 400"
+        className="absolute w-full h-full"
+        style={{ opacity: 0.28, filter: ringGlowFilter }}
+        animate={{ rotate: 360 }}
+        transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+      >
+        <g fill="none" stroke="#EDEDF2" strokeWidth="5" strokeLinecap="square">
+          <circle cx="200" cy="200" r="150" strokeOpacity="0.9" />
+          <circle cx="200" cy="200" r="128" strokeOpacity="0.5" />
+          {Array.from({ length: 16 }).map((_, i) => {
+            const angle = (360 / 16) * i;
+            return (
+              <g key={i} transform={`rotate(${angle} 200 200)`}>
+                <path
+                  d="M200 50 L200 62 L212 62 L212 74 L188 74 L188 86 L212 86"
+                  strokeOpacity="0.85"
+                />
+              </g>
+            );
+          })}
+        </g>
+      </motion.svg>
+
+      {/* Inner ring — counter-clockwise, 30s, ~83% scale of outer */}
+      <motion.svg
+        viewBox="0 0 400 400"
+        className="absolute"
+        style={{
+          width: "83%",
+          height: "83%",
+          opacity: 0.22,
+          filter: ringGlowFilter,
+        }}
+        animate={{ rotate: -360 }}
+        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+      >
+        <g fill="none" stroke="#EDEDF2" strokeWidth="5" strokeLinecap="square">
+          <circle cx="200" cy="200" r="150" strokeOpacity="0.9" />
+          <circle cx="200" cy="200" r="128" strokeOpacity="0.5" />
+          {Array.from({ length: 16 }).map((_, i) => {
+            const angle = (360 / 16) * i;
+            return (
+              <g key={i} transform={`rotate(${angle} 200 200)`}>
+                <path
+                  d="M200 50 L200 62 L212 62 L212 74 L188 74 L188 86 L212 86"
+                  strokeOpacity="0.85"
+                />
+              </g>
+            );
+          })}
+        </g>
+      </motion.svg>
+    </div>
+  );
+}
+
+/**
  * HoloFace
  * Renders the real robot-head .glb model on the left side of the Hero
  * with mouse-follow rotation, gentle float, slow "breathing" pulse,
- * layered bloom-style lighting, and an ambient particle/fog atmosphere
- * around the canvas. Falls back to a soft ambient glow (never a blank
- * canvas) if WebGL is unavailable or the model fails to load/parse.
+ * layered bloom-style lighting, an ambient particle/fog atmosphere
+ * around the canvas, and two concentric, slowly counter-rotating
+ * monochrome holographic rings (DOM/CSS layers, not 3D objects)
+ * centered tightly behind it. Falls back to a soft ambient glow
+ * (never a blank canvas) if WebGL is unavailable or the model fails
+ * to load/parse — the rings still render in that fallback path too.
  */
 export default function HoloFace({
   className = "",
@@ -232,6 +320,7 @@ export default function HoloFace({
     return (
       <div className={`relative cursor-grab ${className}`} aria-hidden="true">
         <AtmosphereLayer />
+        <HoloRing />
         <FallbackGlow />
       </div>
     );
@@ -245,6 +334,10 @@ export default function HoloFace({
       <div className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute left-1/2 top-1/2 h-[120%] w-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(108,99,255,0.24),rgba(0,229,160,0.12),transparent)] blur-3xl" />
       </div>
+
+      {/* rotating holographic ring — DOM layer, positioned behind the
+          Canvas, centered on it, scales with this container */}
+      <HoloRing />
 
       <ModelErrorBoundary fallback={<FallbackGlow />}>
         <Canvas

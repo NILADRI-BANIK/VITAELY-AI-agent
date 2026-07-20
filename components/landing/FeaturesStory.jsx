@@ -1,19 +1,24 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { useGsapChapter } from "@/hooks/useGsapChapter";
 import gsap from "gsap";
+import { motion, AnimatePresence } from "framer-motion";
+import CelestialCompass from "@/components/landing/CelestialCompass";
 
 /* ------------------------------------------------------------------
    FeaturesStory
-   - First 4 items: asymmetric label + paragraph pairs (Image 1 style),
-     alternating left/right, each with a thin connector line into the
-     center, revealed one at a time as the section is scrolled through.
-   - Remaining items: arranged in a circular ring below (Image 2 style),
-     with a center label and a connecting circular guide line, each
-     node fading/scaling in in sequence.
+   - First 4 items: asymmetric label + paragraph pairs, alternating
+     left/right, each with a thin connector line into the center,
+     revealed one at a time as the section is scrolled through.
+   - Remaining items: arranged in a circular ring below, with a center
+     label and a connecting circular guide line, each node fading/
+     scaling in in sequence. A CelestialCompass background (three
+     independently rotating runic rings + orbiting/floating particles)
+     sits as a deeper decorative layer behind this ring — the existing
+     thin glowing guide-circle is unchanged and renders on top of it.
    All animation is GSAP timeline tweens on refs — no React state
    changes during scroll, so no re-render cost / lag.
 ------------------------------------------------------------------ */
@@ -30,9 +35,12 @@ export default function FeaturesStory({ features }) {
   const emblemDiscRef = useRef(null);
   const ringSpinRef = useRef(null);
   const guideCircleRef = useRef(null);
+  const ringWrapperRef = useRef(null);
+  const compassParallaxRef = useRef(null);
+  const [hoveredRingIndex, setHoveredRingIndex] = useState(null);
+  const tooltipRefs = useRef([]);
 
   const sectionRef = useGsapChapter(({ timeline }) => {
-    // Stage 1: the four label/paragraph notes fade+slide in one by one
     noteItems.forEach((_, i) => {
       const el = noteRefs.current[i];
       const line = lineRefs.current[i];
@@ -83,7 +91,6 @@ export default function FeaturesStory({ features }) {
       }
     });
 
-    // Stage 2: center emblem/label pulses in once notes are mostly done
     if (ringCenterRef.current) {
       timeline.fromTo(
         ringCenterRef.current,
@@ -93,7 +100,6 @@ export default function FeaturesStory({ features }) {
       );
     }
 
-    // Stage 3: ring nodes appear in sequence around the circle
     ringItems.forEach((_, i) => {
       const el = ringRefs.current[i];
       if (!el) return;
@@ -104,15 +110,32 @@ export default function FeaturesStory({ features }) {
         0.62 + i * 0.08
       );
     });
+
+    // Subtle parallax on the compass background + card ring as the
+    // section scrolls through its pin — compass drifts a little more
+    // than the cards, giving depth. The compass's own ring rotations
+    // (inside CelestialCompass) keep running independently throughout;
+    // this only adds a position offset on top of that.
+    if (compassParallaxRef.current) {
+      timeline.fromTo(
+        compassParallaxRef.current,
+        { y: 20 },
+        { y: -20, duration: 1, ease: "none" },
+        0
+      );
+    }
+    if (ringWrapperRef.current) {
+      timeline.fromTo(
+        ringWrapperRef.current,
+        { y: 8 },
+        { y: -8, duration: 1, ease: "none" },
+        0
+      );
+    }
   });
 
   const ringRadius = 220;
 
-  // Mouse-driven rotation: horizontal mouse position across the notes
-  // container maps to rotation. Emblem gets a full continuous spin range,
-  // the connector lines get a much smaller parallax rotation. Note TEXT
-  // itself is intentionally not rotated (would turn it sideways/unreadable) —
-  // only the emblem disc and the decorative lines rotate.
   useEffect(() => {
     const container = notesContainerRef.current;
     const emblem = emblemDiscRef.current;
@@ -129,15 +152,11 @@ export default function FeaturesStory({ features }) {
 
     const handleMouseMove = (e) => {
       const rect = container.getBoundingClientRect();
-      const relX = (e.clientX - rect.left) / rect.width; // 0 -> 1
+      const relX = (e.clientX - rect.left) / rect.width;
       const clamped = Math.min(1, Math.max(0, relX));
-
-      // full 360°+ spin range for the emblem, driven by horizontal position
       spinEmblem(clamped * 360);
-
-      // subtle parallax rotation for each connector line (a few degrees only)
       lineSpins.forEach((spin) => {
-        if (spin) spin((clamped - 0.5) * 12); // -6deg .. +6deg
+        if (spin) spin((clamped - 0.5) * 12);
       });
     };
 
@@ -154,16 +173,9 @@ export default function FeaturesStory({ features }) {
     };
   }, []);
 
-  // Slow continuous rotation of the ring section (cards orbit around the
-  // "Explore More" center). Each card is counter-rotated in sync so its
-  // text/content always stays upright and readable — only the card's
-  // ORBIT POSITION sweeps around the circle, the card itself never
-  // flips or turns sideways. Pauses on hover for readability.
   useEffect(() => {
     const ring = ringSpinRef.current;
     if (!ring) return;
-
-    const cards = ringRefs.current.filter(Boolean);
 
     const spin = gsap.to(ring, {
       rotation: 360,
@@ -172,9 +184,14 @@ export default function FeaturesStory({ features }) {
       ease: "none",
       transformOrigin: "50% 50%",
       onUpdate: () => {
+        // Icons themselves are left alone (tilt with the orbit, per
+        // design). Only the hover tooltips are counter-rotated so their
+        // text always reads horizontally, no matter where in the orbit
+        // the icon currently sits — otherwise the tooltip inherits the
+        // ring's rotation and text goes sideways/upside-down.
         const current = gsap.getProperty(ring, "rotation");
-        cards.forEach((card) => {
-          gsap.set(card, { rotation: -current });
+        tooltipRefs.current.forEach((tip) => {
+          if (tip) gsap.set(tip, { rotation: -current });
         });
       },
     });
@@ -193,8 +210,6 @@ export default function FeaturesStory({ features }) {
     };
   }, []);
 
-  // Slow breathing glow on the ring's guide circle — independent loop,
-  // not tied to scroll or the ring's rotation.
   useEffect(() => {
     const glow = guideCircleRef.current;
     if (!glow) return;
@@ -230,9 +245,6 @@ export default function FeaturesStory({ features }) {
         ref={notesContainerRef}
         className="relative w-full max-w-6xl mx-auto min-h-[460px] mb-20 px-4 md:px-10"
       >
-        {/* center emblem — winged icon on a solid dark disc with soft outer glow,
-            matching the reference: dark filled circle + violet halo bleeding
-            outward, warm-toned wings centered inside */}
         <div
           ref={ringCenterRef}
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 z-10"
@@ -273,10 +285,9 @@ export default function FeaturesStory({ features }) {
 
         {noteItems.map((feature, i) => {
           const side = i % 2 === 0 ? "left" : "right";
-          const topPct = 8 + Math.floor(i / 2) * 48; // two rows
+          const topPct = 8 + Math.floor(i / 2) * 48;
           return (
             <div key={i}>
-              {/* connector line ("string") from note toward center, glowing */}
               <div
                 ref={(el) => (lineRefs.current[i] = el)}
                 className={`hidden md:block absolute top-0 h-24 w-px origin-top opacity-0 ${
@@ -289,7 +300,6 @@ export default function FeaturesStory({ features }) {
                   boxShadow: "0 0 8px rgba(108,99,255,0.6)",
                 }}
               >
-                {/* traveling shimmer dot */}
                 <span
                   ref={(el) => (shimmerRefs.current[i] = el)}
                   className="absolute left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full opacity-0"
@@ -339,56 +349,157 @@ export default function FeaturesStory({ features }) {
           className="relative mx-auto hidden md:block"
           style={{ width: ringRadius * 2 + 200, height: ringRadius * 2 + 200 }}
         >
-          {/* guide circle — stays static (doesn't spin); base ring plus a
-              separate glow layer that slowly breathes in/out */}
-          <div className="absolute inset-0 rounded-full border border-[#6C63FF]/30" />
-          <div
-            ref={guideCircleRef}
-            className="absolute inset-0 rounded-full pointer-events-none opacity-100"
-            style={{
-              boxShadow:
-                "0 0 14px 3px rgba(108,99,255,0.35), 0 0 28px 6px rgba(108,99,255,0.18)",
-            }}
-          />
-
-          {/* center label — stays static, doesn't spin */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center z-10">
-            <p className="text-2xl font-serif text-[#F4EBD0]">Explore More</p>
+          {/* Celestial compass — deep background layer, behind the
+              existing guide circle. Sized larger than this wrapper
+              internally so it reads as a big atmospheric backdrop
+              rather than being boxed in. */}
+          <div ref={compassParallaxRef} className="absolute inset-0" style={{ zIndex: 0 }}>
+            <CelestialCompass />
           </div>
 
-          {/* rotating group: cards orbit + tilt together continuously,
-              pauses on hover so a card can be read/clicked */}
-          <div ref={ringSpinRef} className="absolute inset-0">
-            {ringItems.map((feature, i) => {
-              const angle = (360 / ringItems.length) * i - 90;
-              const rad = (angle * Math.PI) / 180;
-              const x = ringRadius * Math.cos(rad);
-              const y = ringRadius * Math.sin(rad);
-              return (
-                <div
-                  key={i}
-                  ref={(el) => (ringRefs.current[i] = el)}
-                  className="absolute left-1/2 top-1/2 opacity-0"
-                  style={{
-                    transform: `translate(${x}px, ${y}px) translate(-50%, -50%)`,
-                    width: 190,
-                  }}
-                >
-                  <Link href={feature.href || "#"}>
-                    <Card className="glass-card border-white/10 bg-white/[0.03] backdrop-blur-xl hover:border-[#6C63FF]/40 transition-colors duration-300 cursor-pointer">
-                      <CardContent className="text-center py-6">
-                        <div className="icon-glow mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-white/[0.04] border border-white/10">
-                          {feature.icon}
-                        </div>
-                        <h4 className="text-sm font-semibold text-white">
-                          {feature.title}
-                        </h4>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                </div>
-              );
-            })}
+          <div ref={ringWrapperRef} className="absolute inset-0" style={{ zIndex: 1 }}>
+            {/* guide circle — stays static (doesn't spin); base ring plus a
+                separate glow layer that slowly breathes in/out. Unchanged
+                from before, just now rendering above the compass layer. */}
+            <div className="absolute inset-0 rounded-full border border-[#6C63FF]/30" />
+            <div
+              ref={guideCircleRef}
+              className="absolute inset-0 rounded-full pointer-events-none opacity-100"
+              style={{
+                boxShadow:
+                  "0 0 14px 3px rgba(108,99,255,0.35), 0 0 28px 6px rgba(108,99,255,0.18)",
+              }}
+            />
+
+            {/* center — "Explore More" by default, swaps to the hovered
+                feature's title/description with a fade+slide transition */}
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center z-10 w-56 pointer-events-none">
+              <AnimatePresence mode="wait">
+                {hoveredRingIndex === null ? (
+                  <motion.p
+                    key="default"
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.25 }}
+                    className="text-2xl font-serif text-[#F4EBD0]"
+                  >
+                    Explore More
+                  </motion.p>
+                ) : (
+                  <motion.div
+                    key={hoveredRingIndex}
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    <p className="text-lg font-serif text-[#F4EBD0] mb-1.5">
+                      {ringItems[hoveredRingIndex]?.title}
+                    </p>
+                    <p className="text-xs text-white/60 leading-snug">
+                      {ringItems[hoveredRingIndex]?.description}
+                    </p>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            <div ref={ringSpinRef} className="absolute inset-0">
+              {ringItems.map((feature, i) => {
+                const angle = (360 / ringItems.length) * i - 90;
+                const rad = (angle * Math.PI) / 180;
+                const x = ringRadius * Math.cos(rad);
+                const y = ringRadius * Math.sin(rad);
+                const isHovered = hoveredRingIndex === i;
+                return (
+                  <div
+                    key={i}
+                    ref={(el) => (ringRefs.current[i] = el)}
+                    className="absolute left-1/2 top-1/2 opacity-0"
+                    style={{
+                      transform: `translate(${x}px, ${y}px) translate(-50%, -50%)`,
+                    }}
+                  >
+                    {/* gentle independent float, separate from orbit position */}
+                    <motion.div
+                      animate={{ y: [0, -6, 0] }}
+                      transition={{
+                        duration: 3.5 + (i % 3) * 0.6,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: i * 0.2,
+                      }}
+                      className="relative"
+                      onMouseEnter={() => setHoveredRingIndex(i)}
+                      onMouseLeave={() =>
+                        setHoveredRingIndex((cur) => (cur === i ? null : cur))
+                      }
+                    >
+                      <Link href={feature.href || "#"}>
+                        <motion.div
+                          whileHover={{
+                            scale: 1.1,
+                            rotate: 4,
+                            y: -8,
+                          }}
+                          transition={{ type: "spring", stiffness: 260, damping: 18 }}
+                          className="relative flex items-center justify-center rounded-full border cursor-pointer"
+                          style={{
+                            width: 80,
+                            height: 80,
+                            background: "rgba(255,255,255,0.05)",
+                            backdropFilter: "blur(10px)",
+                            borderColor: isHovered
+                              ? "rgba(139,133,255,0.6)"
+                              : "rgba(255,255,255,0.15)",
+                            boxShadow: isHovered
+                              ? "0 0 28px 6px rgba(108,99,255,0.45), 0 12px 24px -8px rgba(0,0,0,0.5)"
+                              : "0 0 14px 2px rgba(108,99,255,0.15)",
+                            transition: "border-color 0.3s, box-shadow 0.3s",
+                          }}
+                        >
+                          <div className="text-white/85 [&_svg]:h-6 [&_svg]:w-6">
+                            {feature.icon}
+                          </div>
+                        </motion.div>
+                      </Link>
+
+                      {/* floating tooltip beside the icon on hover — no
+                          native browser tooltip, fully custom + animated.
+                          Outer span is what GSAP counter-rotates (keeps
+                          text horizontal regardless of orbit angle); the
+                          inner motion.div still handles Framer's own
+                          fade/slide-in animation independently. */}
+                      <span
+                        ref={(el) => (tooltipRefs.current[i] = el)}
+                        className="absolute left-full top-1/2 -translate-y-1/2 ml-3 z-30"
+                        style={{ display: "inline-block" }}
+                      >
+                        <AnimatePresence>
+                          {isHovered && (
+                            <motion.div
+                              initial={{ opacity: 0, x: -8, scale: 0.95 }}
+                              animate={{ opacity: 1, x: 0, scale: 1 }}
+                              exit={{ opacity: 0, x: -8, scale: 0.95 }}
+                              transition={{ duration: 0.2 }}
+                              className="pointer-events-none w-max max-w-[200px] rounded-xl border border-white/10 bg-[#0D1017]/95 backdrop-blur-md px-4 py-2.5 text-left shadow-2xl"
+                            >
+                              <p className="text-xs font-semibold text-[#8B85FF] tracking-wide">
+                                {feature.title}
+                              </p>
+                              <p className="mt-1 text-[11px] leading-snug text-white/60">
+                                {feature.description}
+                              </p>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </span>
+                    </motion.div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}
