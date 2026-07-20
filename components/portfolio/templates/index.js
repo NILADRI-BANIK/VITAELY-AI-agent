@@ -21,6 +21,7 @@ import TronLegacyTemplate from "./tron-ares";
 import GameOfThronesTemplate from "./game-of-thrones";
 import MusicStudioTemplate from "./music-studio";
 import DevilInfernoTemplate from "./devil-inferno";
+import AngelicHeavenTemplate from "./angelic-heaven";
 
 // ← already present, line ~15
 
@@ -52,6 +53,7 @@ export const PORTFOLIO_TEMPLATES = Object.freeze({
   gameofthrones: GameOfThronesTemplate,
   musicstudio: MusicStudioTemplate,
   devilinferno: DevilInfernoTemplate,
+  angelicheaven: AngelicHeavenTemplate,
 });
 
 // ─────────────────────────────────────────────
@@ -238,6 +240,14 @@ export const PORTFOLIO_TEMPLATE_LIST = Object.freeze([
     "Dark infernal aesthetic with volcanic landscapes, demonic architecture, fiery lighting, molten lava effects, and cinematic fantasy visuals.",
   color: "#8B0000",
   tags: ["Dark", "Fantasy"],
+},
+{
+  id: "angelicheaven",
+  name: "Angelic Heaven",
+  description:
+    "Celestial-inspired luxury design with heavenly clouds, radiant golden light, divine architecture, elegant glass effects, and serene cinematic visuals.",
+  color: "#F8FAFC",
+  tags: ["Light", "Luxury"],
 },
 ]);
 
