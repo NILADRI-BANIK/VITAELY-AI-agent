@@ -38,7 +38,6 @@ export default function FeaturesStory({ features }) {
   const ringWrapperRef = useRef(null);
   const compassParallaxRef = useRef(null);
   const [hoveredRingIndex, setHoveredRingIndex] = useState(null);
-  const tooltipRefs = useRef([]);
 
   const sectionRef = useGsapChapter(({ timeline }) => {
     noteItems.forEach((_, i) => {
@@ -183,17 +182,6 @@ export default function FeaturesStory({ features }) {
       repeat: -1,
       ease: "none",
       transformOrigin: "50% 50%",
-      onUpdate: () => {
-        // Icons themselves are left alone (tilt with the orbit, per
-        // design). Only the hover tooltips are counter-rotated so their
-        // text always reads horizontally, no matter where in the orbit
-        // the icon currently sits — otherwise the tooltip inherits the
-        // ring's rotation and text goes sideways/upside-down.
-        const current = gsap.getProperty(ring, "rotation");
-        tooltipRefs.current.forEach((tip) => {
-          if (tip) gsap.set(tip, { rotation: -current });
-        });
-      },
     });
 
     const pause = () => spin.pause();
@@ -465,36 +453,9 @@ export default function FeaturesStory({ features }) {
                         </motion.div>
                       </Link>
 
-                      {/* floating tooltip beside the icon on hover — no
-                          native browser tooltip, fully custom + animated.
-                          Outer span is what GSAP counter-rotates (keeps
-                          text horizontal regardless of orbit angle); the
-                          inner motion.div still handles Framer's own
-                          fade/slide-in animation independently. */}
-                      <span
-                        ref={(el) => (tooltipRefs.current[i] = el)}
-                        className="absolute left-full top-1/2 -translate-y-1/2 ml-3 z-30"
-                        style={{ display: "inline-block" }}
-                      >
-                        <AnimatePresence>
-                          {isHovered && (
-                            <motion.div
-                              initial={{ opacity: 0, x: -8, scale: 0.95 }}
-                              animate={{ opacity: 1, x: 0, scale: 1 }}
-                              exit={{ opacity: 0, x: -8, scale: 0.95 }}
-                              transition={{ duration: 0.2 }}
-                              className="pointer-events-none w-max max-w-[200px] rounded-xl border border-white/10 bg-[#0D1017]/95 backdrop-blur-md px-4 py-2.5 text-left shadow-2xl"
-                            >
-                              <p className="text-xs font-semibold text-[#8B85FF] tracking-wide">
-                                {feature.title}
-                              </p>
-                              <p className="mt-1 text-[11px] leading-snug text-white/60">
-                                {feature.description}
-                              </p>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </span>
+                      {/* No floating tooltip — description shows only in
+                          the center label (see center block above), to
+                          avoid duplicate/overlapping text near the icon. */}
                     </motion.div>
                   </div>
                 );

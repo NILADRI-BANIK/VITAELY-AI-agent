@@ -332,3 +332,25 @@ body {
     animation: none !important;
   }
 }
+
+/* ✅ Footer typography — fantasy/AI manuscript aesthetic.
+   Purely additive — nothing above this line was changed. */
+
+.footer-logo {
+  font-family: var(--font-uncial), "Uncial Antiqua", serif;
+  letter-spacing: 0.3em;
+  font-weight: 400;
+  text-shadow:
+    0 0 8px rgba(255, 255, 255, 0.45),
+    0 0 22px rgba(108, 99, 255, 0.35);
+}
+
+.footer-heading {
+  font-family: var(--font-uncial), "Uncial Antiqua", serif;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: #ffffff;
+  text-shadow:
+    0 0 6px rgba(255, 255, 255, 0.35),
+    0 0 14px rgba(0, 229, 160, 0.2);
+}
