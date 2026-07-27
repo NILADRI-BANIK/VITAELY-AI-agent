@@ -1,0 +1,25 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { BookOpen } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+export function LiteratureLink({ gap, topicId }) {
+  const router = useRouter();
+
+  function handleClick() {
+    const title = gap?.gap ?? gap?.title ?? gap?.gapTitle ?? "";
+    const params = new URLSearchParams();
+    if (title) params.set("topic", title);
+    if (topicId) params.set("topicId", topicId);
+
+    router.push(`/research-hub/literature-review?${params.toString()}`);
+  }
+
+  return (
+    <Button size="sm" variant="outline" onClick={handleClick}>
+      <BookOpen className="w-3.5 h-3.5 mr-1.5" />
+      Literature Review
+    </Button>
+  );
+}
