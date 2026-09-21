@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
   images: {
     remotePatterns: [
@@ -13,11 +14,8 @@ const nextConfig = {
     ],
   },
 
-  // ── UPDATED: removed "canvas" because face detection stack removed ──
-  serverExternalPackages: [
-    "puppeteer",
-    "pdf-parse"
-  ],
+  // UPDATED: removed "canvas" because face detection stack removed
+  serverExternalPackages: ["puppeteer", "pdf-parse"],
 };
 
 export default nextConfig;
